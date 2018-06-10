@@ -28,7 +28,7 @@ def can_run():
   os.system('clear')
 
   try:
-    #compute = googleapiclient.discovery.build('compute', 'v1')
+    compute = googleapiclient.discovery.build('compute', 'v1')
     project = os.popen("gcloud compute project-info describe --format='value(name)'").read().rstrip()
     print(\
     'Scripts will run in project with id: %s \n'
