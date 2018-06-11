@@ -304,7 +304,7 @@ def django(startup_script, name, db_info):
     filter_id = 'id=' + django_id
 
     result = compute.instances().list(project=project, zone=zone, filter=filter_id).execute()
-    
+
     return result
 
 def nginx(startup_script, name):
@@ -312,7 +312,7 @@ def nginx(startup_script, name):
     os.path.join(
       os.path.dirname(__file__), startup_script), 'r').read()
     
-    nginx_id = build(name, startup_script)
+    nginx_id = build(name, startup_script, centos7_img)
 
     filter_id = 'id=' + nginx_id
     result = compute.instances().list(project=project, zone=zone, filter=filter_id).execute()
