@@ -1,48 +1,30 @@
 #!/bin/bash
+#Install a nagios server
 
-yum install nginx wget -y
+yum -y install epel-release #not nessecary on GCP but including for portability
+yum -y update
+yum -y install nagios
+yum -y install nagios-plugins-all
+yum -y install httpd nagios-selinux
+yum -y install nrpe
 
-mkdir -p /var/lbdemo/static/
+systemctl enable nagios
+systemctl start nagios
 
-ips=$(gcloud compute instances list --filter="status=RUNNING" | grep -e '^django-.*' | awk '{print $4}')
+systemctl enable httpd
+systemctl restart httpd
 
-for i in $ips; do
-   printf "    server $i:3990;\n"
-done > /tmp/lbs
+systemctl enable nrpe
+systemctl start nrpe
 
-cat << EOF >> /etc/nginx/conf.d/lbdemo.conf
-upstream django {
-$(cat /tmp/lbs)
-}
 
-server {
-    listen 80 default_server;
-    charset utf-8;
+echo '########### NRPE CONFIG LINE #######################
+define command{
+command_name check_nrpe
+command_line $USER1$/check_nrpe -H $HOSTADDRESS$ -c $ARG1$
+}' >> /etc/nagios/objects/commands.cfg
 
-    client_max_body_size 75M;
-
-    location /static {
-        alias /var/lbdemo/static/;
-    }
-
-    location / {
-        uwsgi_pass django;
-        include /etc/nginx/uwsgi_params;
-    }
-}
-EOF
-
-sed -i '37,$d' /etc/nginx/nginx.conf
-echo '}' >> /etc/nginx/nginx.conf
-
-wget -O /var/lbdemo/static/beach.jpg https://s3-us-west-2.amazonaws.com/robertrussell/NTI-320/wood-sea-nature-449627.jpg
-
-setsebool -P httpd_can_network_connect 1
-semanage fcontext -a -t httpd_sys_content_t "/var/lbdemo(/.*)?"
-restorecon -R -v /var/lbdemo/
-
-systemctl enable nginx
-systemctl restart nginx
+systemctl restart nagios
 
 #Get the ip address of the first instance with repo in the name - adjust with for loop to add multiple repos at once
 repo_ip=$(gcloud compute instances list | grep repo | sed '/s/\s\{1,\}/ /g' | cut -d ' ' -f 4 | head -n 1)

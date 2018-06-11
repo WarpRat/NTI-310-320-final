@@ -9,9 +9,11 @@ import random  #To generate passwords
 import string  #To quickly build character lists for password generation
 import sys
 
+
+
 #Global Variables
 
-project = 'nti310-320'
+project = ''
 zone = 'us-west1-a'
 pw_dir = '.script_passwd'
 
@@ -198,8 +200,10 @@ def ldap_server(script_name, name):
   result = compute.instances().list(project=project, zone=zone, filter=filter_id).execute()
 
   ip = result['items'][0]['networkInterfaces'][0]['networkIP']
+  name = result['items'][0]['name']
+  
 
-  return {'ip': ip, 'id': ldap_id}
+  return {'ip': ip, 'id': ldap_id, 'name': name}
 
 #Ingest bash script for setting up ldap server
 def ldap_client(script_name, name):
@@ -214,8 +218,9 @@ def ldap_client(script_name, name):
   result = compute.instances().list(project=project, zone=zone, filter=filter_id).execute()
 
   ip = result['items'][0]['networkInterfaces'][0]['networkIP']
+  name = result['items'][0]['name']
 
-  return {'ip': ip, 'id': ldap_id}
+  return {'ip': ip, 'id': ldap_id, 'name': name}
 
 #Ingest bash script for setting up NFS server
 def nfs_server(script_name, name):
@@ -230,8 +235,9 @@ def nfs_server(script_name, name):
   result = compute.instances().list(project=project, zone=zone, filter=filter_id).execute()
 
   ip = result['items'][0]['networkInterfaces'][0]['networkIP']
+  name = result['items'][0]['name']
 
-  return {'ip': ip, 'id': nfs_id}
+  return {'ip': ip, 'id': nfs_id, 'name': name}
 
 def nfs_client(script_name, name):
   '''Pull in script to install ldap'''
@@ -245,8 +251,9 @@ def nfs_client(script_name, name):
   result = compute.instances().list(project=project, zone=zone, filter=filter_id).execute()
   
   ip = result['items'][0]['networkInterfaces'][0]['networkIP']
-
-  return {'ip': ip, 'id': nfs_client_id}
+  name = result['items'][0]['name']
+  
+  return {'ip': ip, 'id': nfs_client_id, 'name': name}
 
 #Ingest bash script for setting up postgresql making changes where nessecary
 def postgres(startup_script, name):
@@ -282,9 +289,10 @@ def postgres(startup_script, name):
     #Call function to save passwords to admin machine
     save_pw(pg_pw, pg_pw_file)
     save_pw(db_srv_pw, db_srv_pw_file)
-       
+    
     #Return nessecary info for django setup
-    return {'ip': result['items'][0]['networkInterfaces'][0]['networkIP'], 'db_srv_pw': db_srv_pw, 'id': db_id}
+    name = result['items'][0]['name']
+    return {'ip': result['items'][0]['networkInterfaces'][0]['networkIP'], 'db_srv_pw': db_srv_pw, 'id': db_id, 'name': name}
 
 #Ingest django bash install script and make necessary changes
 def django(startup_script, name, db_info):
@@ -305,21 +313,26 @@ def django(startup_script, name, db_info):
 
     result = compute.instances().list(project=project, zone=zone, filter=filter_id).execute()
 
-    return result
+    ip = result['items'][0]['networkInterfaces'][0]['networkIP']
+    name = result['items'][0]['name']
 
-def nginx(startup_script, name):
+    return {'ip': ip, 'id': django_id, 'name': name}
+
+def generic_host(startup_script, name):
     startup_script = open(
     os.path.join(
       os.path.dirname(__file__), startup_script), 'r').read()
     
-    nginx_id = build(name, startup_script, centos7_img)
+    gen_id = build(name, startup_script, centos7_img)
 
-    filter_id = 'id=' + nginx_id
+    filter_id = 'id=' + gen_id
     result = compute.instances().list(project=project, zone=zone, filter=filter_id).execute()
 
     ip = result['items'][0]['networkInterfaces'][0]['networkIP']
+    name = result['items'][0]['name']
 
-    return ip
+    return {'ip': ip, 'id': gen_id, 'name': name}
+
 
 #Generates random passwords.
 #THIS IS ONLY CRYPOGRAPHICALLY SECURE BECAUSE IT USES SystemRandom!
@@ -390,11 +403,20 @@ def check_ready(id):
 
 if __name__ == '__main__':
 
+  import generate_nagios
+
   if not can_run():
     print('Something has gone wrong. Please try again.')
     sys.exit(1)
   
   #Start primary services
+  nagios_info = generic_host('scripts/nagios_server_install.sh', 'nagios-nti320-srv')
+  write_metadata('nagios_ip', nagios_info['ip'])
+  cacti_info = generic_host('scripts/cacti_server_install.sh', 'cacti-nti320-srv')
+  write_metadata('cacti_ip', cacti_info['ip'])
+  build_info = generic_host('scripts/build_server.sh', 'build-nti320-srv')
+  rsyslog_info = generic_host('scripts/rsyslog_server_install.sh', 'rsyslog-nti320-srv')
+  write_metadata('rsyslog_ip', rsyslog_info['ip'])
   ldap_info = ldap_server('scripts/ldap-install.sh', 'ldap-nti310-srv')
   write_metadata('ldap_ip', ldap_info['ip'])
   nfs_info = nfs_server('scripts/nfs-server.sh', 'nfs-nti310-srv')
@@ -410,12 +432,29 @@ if __name__ == '__main__':
       if check_ready(i['id']):
         services.remove(i)
         if i == ldap_info:
-          ldap_client('scripts/ldap-client.sh', 'ldap-nti310-clnt')
+          ldapc_info   = ldap_client('scripts/ldap-client.sh', 'ldap-nti310-clnt')
         elif i == nfs_info:
-          nfs_client('scripts/nfs-client.sh', 'nfs-client-nti310-clnt')
+          nfsc_info    = nfs_client('scripts/nfs-client.sh', 'nfs-client-nti310-clnt')
         elif i == db_info:
-          django('scripts/nginx-django-install.sh', 'django-nti310-srv-a', db_info)
-          django('scripts/nginx-django-install.sh', 'django-nti310-srv-b', db_info)
-          nginx('scripts/nginx-loadbalancer.sh', 'nginx-lb-nti310-srv')
+          django_infoa = django('scripts/nginx-django-install.sh', 'django-nti310-srv-a', db_info)
+          django_infob = django('scripts/nginx-django-install.sh', 'django-nti310-srv-b', db_info)
+          nginx_info   = generic_host('scripts/nginx-loadbalancer.sh', 'nginx-lb-nti310-srv')
         else:
           time.sleep(1)
+    
+  all_hosts = [nagios_info, cacti_info, build_info, rsyslog_info, ldap_info, nfs_info, db_info, ldapc_info, nfsc_info, django_infoa, django_infob, nginx_info]
+  to_mon = []
+  for i in all_hosts:
+    to_mon.append({'name': i['name'], 'ip': i['ip']})
+
+  generate_nagios.write_nagios_cfg(to_mon)
+  generate_nagios.send_cfg()
+
+  command = "'sudo yum update -y && sudo yum install nti320pkg'"
+
+  for i in all_hosts:
+    os.system('gcloud compute ssh %s --quiet --zone %s --command %s' % (i['name'], zone, command))
+
+  time.sleep(3)
+  os.system('clear')
+  print('You did it! Go see if everything works.')

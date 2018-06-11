@@ -1,31 +1,20 @@
-#!/bin/bash
+!#/bin/bash
+#Very basic bash script that sets up the directory structure needed for
+#a build server
 #
-#Install a basic nfs server with a few shared directories
-#
 
-#Install updates
-yum update -y
+yum install -y rpm-build make gcc git
 
-#Install nfs utilities
-yum install -y nfs-utils
+mkdir -p /root/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 
-#Make the fileshare directories
-mkdir -p /var/nfsshare/devstuff /var/nfsshare/testing /var/nfsshare/home_dirs
+echo '%_topdir %{getenv:HOME}/rpmbuild' > ~/.rpmmacros
 
-#Open them up to the world **TESTING ONLY**
-chmod -R 777 /var/nfsshare/
+git clone http://github.com/WarpRat/NTI-320/ /tmp/
 
-#Enable the nfs-server and make sure everything is started
-systemctl enable nfs-server
-systemctl restart nfs-server nfs-lock nfs-idmap rpcbind
+cp /tmp/nti320pkg.spec /root/rpmbuild/SPECS/
+cp /tmp/nti320pkg-0.1.tar.gz /root/rpmbuild/SOURCES/
 
-#Add all subdirectories in the nfsshare directory to exports
-for i in $(find /var/nfsshare/ -mindepth 1 -type d); do
-	echo "$i *(rw,sync,no_all_squash)" >> /etc/exports
-done
-
-#restart the nfs server
-systemctl restart nfs-server
+rpmbuild -v -bb --clean /root/rpmbuild/SPECS/nti320pkg.spec
 
 #Get the ip address of the first instance with repo in the name - adjust with for loop to add multiple repos at once
 repo_ip=$(gcloud compute instances list | grep repo | sed '/s/\s\{1,\}/ /g' | cut -d ' ' -f 4 | head -n 1)
@@ -39,6 +28,7 @@ enabled=1
 gpgcheck=0
 " >> /etc/yum.repos.d/NTI-320.repo
 
+#####CLEAN UP#####
 #Get instance name and zone
 name=$(curl -H "Metadata-Flavor:Google" http://metadata.google.internal/computeMetadata/v1/instance/name)
 zone=$(curl -H "Metadata-Flavor:Google" http://metadata.google.internal/computeMetadata/v1/instance/zone)
