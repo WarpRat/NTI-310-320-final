@@ -418,8 +418,8 @@ if __name__ == '__main__':
         elif i == nfs_info:
           nfs_client('scripts/nfs-client.sh', 'nfs-client-nti310-clnt')
         elif i == db_info:
-          django('scripts/nginx-django-install.sh', 'django-nti310-srv-A', db_info)
-          django('scripts/nginx-django-install.sh', 'django-nti310-srv-B', db_info)
+          django('scripts/nginx-django-install.sh', 'django-nti310-srv-a', db_info)
+          django('scripts/nginx-django-install.sh', 'django-nti310-srv-b', db_info)
           nginx('scripts/nginx-loadbalancer.sh', 'nginx-lb-nti310-srv')
         else:
           time.sleep(1)
