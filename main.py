@@ -420,6 +420,6 @@ if __name__ == '__main__':
         elif i == db_info:
           django('scripts/nginx-django-install.sh', 'django-nti310-srv-A', db_info)
           django('scripts/nginx-django-install.sh', 'django-nti310-srv-B', db_info)
-          nginx('script/nginx-loadbalancer.sh', 'nginx-lb-nti310-srv')
+          nginx('scripts/nginx-loadbalancer.sh', 'nginx-lb-nti310-srv')
         else:
           time.sleep(1)
