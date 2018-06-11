@@ -304,10 +304,7 @@ def django(startup_script, name, db_info):
     filter_id = 'id=' + django_id
 
     result = compute.instances().list(project=project, zone=zone, filter=filter_id).execute()
-
-    operation = compute.instances().setTags(project=project, zone=zone, instance=result['items'][0]['name'], body=tags_body).execute()
-    wait_for_operation(compute, project, zone, operation['name'])
-
+    
     return result
 
 def nginx(startup_script, name):
