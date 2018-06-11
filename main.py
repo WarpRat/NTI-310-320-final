@@ -317,7 +317,6 @@ def nginx(startup_script, name):
     filter_id = 'id=' + nginx_id
     result = compute.instances().list(project=project, zone=zone, filter=filter_id).execute()
 
-    wait_for_install(filter_id)
     ip = result['items'][0]['networkInterfaces'][0]['networkIP']
 
     return ip
