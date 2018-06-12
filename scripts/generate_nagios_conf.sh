@@ -42,7 +42,8 @@ define service{
         host_name                       $host
         service_description             totalprocs
         check_command                   check_nrpe!check_total_procs
-}define service{
+}
+define service{
         use                             generic-service         ; Name of service template to
         host_name                       $host
         service_description             totalprocs
