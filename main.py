@@ -451,6 +451,9 @@ if __name__ == '__main__':
   
   command = "'sudo yum update -y && sudo yum install -y nti320pkg'"
 
+  print('All installations have been started. Getting ready to install monitoring.')
+  time.sleep(25)
+
   for i in all_hosts:
     os.system('gcloud compute ssh %s --quiet --zone %s --command %s' % (i['name'], zone, command))
 

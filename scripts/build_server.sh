@@ -3,6 +3,7 @@
 #a build server
 #
 
+yum update -y
 yum install -y rpm-build make gcc git
 
 mkdir -p /root/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
