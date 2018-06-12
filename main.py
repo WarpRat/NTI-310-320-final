@@ -449,7 +449,7 @@ if __name__ == '__main__':
 
   generate_nagios.write_nagios_cfg(to_mon, nagios_info['name'], zone)
   
-  command = "'sudo yum update -y && sudo yum install nti320pkg'"
+  command = "'sudo yum update -y && sudo yum install -y nti320pkg'"
 
   for i in all_hosts:
     os.system('gcloud compute ssh %s --quiet --zone %s --command %s' % (i['name'], zone, command))
