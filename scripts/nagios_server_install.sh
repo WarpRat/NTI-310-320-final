@@ -17,7 +17,7 @@ systemctl restart httpd
 systemctl enable nrpe
 systemctl start nrpe
 
-chmod o+w -R /etc/nagios/conf.d/
+chmod o+wrx -R /etc/nagios/conf.d/
 
 echo '########### NRPE CONFIG LINE #######################
 define command{

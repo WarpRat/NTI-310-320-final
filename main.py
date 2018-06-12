@@ -455,6 +455,9 @@ if __name__ == '__main__':
   time.sleep(25)
 
   for i in all_hosts:
+    print('*******************\n' * 3)
+    print(i)
+    print('*******************\n' * 3)
     os.system('gcloud compute ssh %s --quiet --zone %s --command %s' % (i['name'], zone, command))
 
   time.sleep(3)
