@@ -447,13 +447,16 @@ if __name__ == '__main__':
   for i in all_hosts:
     to_mon.append({'name': i['name'], 'ip': i['ip']})
 
+  while not check_ready(nagios_info['id']):
+    print('Nagios not ready yet')
+    time.sleep(10)
+
   generate_nagios.write_nagios_cfg(to_mon, nagios_info['name'], zone)
   
   command = "'sudo yum update -y && sudo yum install -y nti320pkg'"
 
   print('All installations have been started. Getting ready to install monitoring.')
-  time.sleep(25)
-
+  
   for i in all_hosts:
     print('*******************\n' * 3)
     print(i)

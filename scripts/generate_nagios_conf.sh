@@ -49,4 +49,4 @@ define service{
         service_description             memory
         check_command                   check_nrpe!check_mem
 }
-" >> ./tmp/"$host".cfg
+" > ./tmp/"$host".cfg
