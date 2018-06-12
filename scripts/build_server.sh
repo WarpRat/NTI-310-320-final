@@ -17,6 +17,10 @@ cp /tmp/nti320pkg-0.1.tar.gz /root/rpmbuild/SOURCES/
 
 rpmbuild -v -bb --clean /root/rpmbuild/SPECS/nti320pkg.spec
 
+mkdir /tmp/nti320pkg
+
+cp /root/rpmbuild/RPMS/x86_64/nti320pkg0* /tmp/nti320pkg/
+
 #Get the ip address of the first instance with repo in the name - adjust with for loop to add multiple repos at once
 repo_ip=$(gcloud compute instances list --filter="status=RUNNING" | grep repo | awk '{print $4}')
 
