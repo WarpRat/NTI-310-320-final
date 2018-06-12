@@ -447,9 +447,8 @@ if __name__ == '__main__':
   for i in all_hosts:
     to_mon.append({'name': i['name'], 'ip': i['ip']})
 
-  generate_nagios.write_nagios_cfg(to_mon)
-  generate_nagios.send_cfg()
-
+  generate_nagios.write_nagios_cfg(to_mon, nagios_info['ip'])
+  
   command = "'sudo yum update -y && sudo yum install nti320pkg'"
 
   for i in all_hosts:
