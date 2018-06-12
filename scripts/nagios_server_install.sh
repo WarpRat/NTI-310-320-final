@@ -4,7 +4,7 @@
 yum -y install epel-release #not nessecary on GCP but including for portability
 yum -y update
 yum -y install nagios
-yum -y install nagios-plugins-all
+yum -y install nagios-plugins-all nagios-plugins-nrpe
 yum -y install httpd nagios-selinux
 yum -y install nrpe
 

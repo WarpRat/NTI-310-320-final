@@ -35,18 +35,23 @@ define service{
         use                             generic-service         ; Name of service template to
         host_name                       $host
         service_description             disk
-        check_command                   check_nrpe!check_disk
+        check_command                   check_nrpe!check_hda1
 }
 define service{
         use                             generic-service         ; Name of service template to
         host_name                       $host
         service_description             totalprocs
         check_command                   check_nrpe!check_total_procs
+}define service{
+        use                             generic-service         ; Name of service template to
+        host_name                       $host
+        service_description             totalprocs
+        check_command                   check_nrpe!check-nfs-dirs
 }
 define service{
         use                             generic-service         ; Name of service template to
         host_name                       $host
         service_description             memory
-        check_command                   check_nrpe!check_mem
+        check_command                   check_nrpe!check-mem
 }
 " > ./tmp/"$host".cfg

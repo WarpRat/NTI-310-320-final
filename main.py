@@ -13,13 +13,11 @@ import sys
 
 #Global Variables
 
-project = ''
-zone = 'us-west1-a'
-pw_dir = '.script_passwd'
-
-compute = ''
-
-centos7_img = {'project': 'centos-cloud', 'family': 'centos-7'}
+project           = ''
+zone              = 'us-west1-a'
+pw_dir            = '.script_passwd'
+compute           = ''
+centos7_img       = {'project': 'centos-cloud', 'family': 'centos-7'}
 ubuntu_xenial_img = {'project': 'ubuntu-os-cloud', 'family': 'ubuntu-1604-lts'}
 
 def can_run():
@@ -64,7 +62,7 @@ def can_run():
 
     
 def create_instance(compute, name, startup_script, project, zone, image):
-  '''Creates gcloud instance using project, script, zone, and name vars'''
+  '''Creates gcloud instance using project, script, zone, image, and name vars.'''
   
   image_response = compute.images().getFromFamily(
       project=image['project'], family=image['family']).execute()

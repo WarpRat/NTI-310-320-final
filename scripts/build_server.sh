@@ -10,16 +10,14 @@ mkdir -p /root/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 
 echo '%_topdir %{getenv:HOME}/rpmbuild' > ~/.rpmmacros
 
-git clone http://github.com/WarpRat/NTI-320/ /tmp/
+git clone http://github.com/WarpRat/NTI-310-320-final/ /tmp/ntipkg/
 
-cp /tmp/nti320pkg.spec /root/rpmbuild/SPECS/
-cp /tmp/nti320pkg-0.1.tar.gz /root/rpmbuild/SOURCES/
+cp /tmp/ntipkg/nti320pkg.spec /root/rpmbuild/SPECS/
+cp /tmp/ntipkg/nti320pkg-0.*.tar.gz /root/rpmbuild/SOURCES/
 
 rpmbuild -v -bb --clean /root/rpmbuild/SPECS/nti320pkg.spec
 
-mkdir /tmp/nti320pkg
-
-cp /root/rpmbuild/RPMS/x86_64/nti320pkg0* /tmp/nti320pkg/
+cp /root/rpmbuild/RPMS/x86_64/nti320pkg0* /tmp/ntipkg/
 
 #Get the ip address of the first instance with repo in the name - adjust with for loop to add multiple repos at once
 repo_ip=$(gcloud compute instances list --filter="status=RUNNING" | grep repo | awk '{print $4}')
