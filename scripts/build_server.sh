@@ -17,7 +17,7 @@ cp /tmp/nti320pkg-0.1.tar.gz /root/rpmbuild/SOURCES/
 rpmbuild -v -bb --clean /root/rpmbuild/SPECS/nti320pkg.spec
 
 #Get the ip address of the first instance with repo in the name - adjust with for loop to add multiple repos at once
-repo_ip=$(gcloud compute instances list | grep repo | sed '/s/\s\{1,\}/ /g' | cut -d ' ' -f 4 | head -n 1)
+repo_ip=$(gcloud compute instances list --filter="status=RUNNING" | grep repo | awk '{print $4}')
 
 echo "[nti-320]
 name=Extra Packages for Centos from NTI-320 7 - $basearch
