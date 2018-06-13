@@ -6,7 +6,7 @@ Summary: 	A collection of configuration changes
 Group:		NTI-320
 License:	GPL2+
 URL:		https://github.com/WarpRat/NTI-320
-Source0:    https://github.com/WarpRat/NTI-320/nti320pkg-0.1.tar.gz
+Source0:    https://github.com/WarpRat/NTI-320/nti320pkg-0.2.tar.gz
 
 BuildRequires:	gcc, python >= 1.3
 Requires:	bash, net-snmp, net-snmp-utils, nrpe, nagios-plugins-all, nagios-plugin-nrpe
