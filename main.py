@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+#
+#Python script to launch all instances for NTI310 and NTI320 classes
+#This is designed to be run in gcloud, either from cloud shell or a gcp instance
+#
+
 
 import googleapiclient.discovery  #The python gcloud API wrapper
 import os  #For various file manipulation
@@ -451,7 +456,7 @@ if __name__ == '__main__':
 
   generate_nagios.write_nagios_cfg(to_mon, nagios_info['name'], zone)
   
-  repo_ip=os.popen('gcloud compute instances list --filter="status=RUNNING" | grep repo | awk \'{print $4}\'').read()
+  repo_name=os.popen('gcloud compute instances list --filter="status=RUNNING" | grep repo | awk \'{print $1}\'').read().rstrip()
   command = "'gcloud compute scp /tmp/ntipkg/*\.rpm %s:/centos/7/extras/x86_64/Packages/ --quiet --zone %s'" % (repo_ip, zone)
   os.system('gcloud compute ssh %s --quiet --zone %s --command %s' % (build_info['name'], zone, command))
   command = "'sudo createrepo /centos/7/extras/x86_64/Packages/'"
