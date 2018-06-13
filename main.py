@@ -451,10 +451,16 @@ if __name__ == '__main__':
 
   generate_nagios.write_nagios_cfg(to_mon, nagios_info['name'], zone)
   
-  command = "'sudo yum update -y && sudo yum install -y nti320pkg'"
+  repo_ip=$(gcloud compute instances list --filter="status=RUNNING" | grep repo | awk '{print $4}')
+  command = "'gcloud compute scp /tmp/ntipkg/*\.rpm %s:/centos/7/extras/x86_64/Packages/ --quiet --zone %s'" % (repo_ip, zone)
+  os.system('gcloud compute ssh %s --quiet --zone %s --command %s' % (build_info['name'], zone, command))
+  command = "'sudo createrepo /centos/7/extras/x86_64/Packages/'"
+  os.system('gcloud compute ssh %s --quiet --zone %s --command %s' % (repo_ip, zone, command))
+
 
   print('All installations have been started. Getting ready to install monitoring.')
-  
+
+  command = "'sudo yum update -y && sudo yum install -y nti320pkg'"
   for i in all_hosts:
     print('*******************\n' * 3)
     print(i)

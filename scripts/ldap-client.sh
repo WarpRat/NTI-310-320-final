@@ -7,13 +7,11 @@ apt-get update -y && apt-get upgrade -y
 apt-get install -y debconf-utils
 
 #Pull ldap configuration from github and preseed the debconf questions
-curl https://raw.githubusercontent.com/WarpRat/NTI-310/master/ldapselections >> /tmp/ldapselections
+curl https://raw.githubusercontent.com/WarpRat/NTI-310-320-final/master/scripts/ldapselections >> /tmp/ldapselections
 
 ldap_ip=$(curl "http://metadata.google.internal/computeMetadata/v1/project/attributes/ldap_ip" -H "Metadata-Flavor: Google")
 
 sed -i "s/\(ldap-server\).*$/\1\\tstring ldap:\/\/$ldap_ip/g" /tmp/ldapselections
-
-cat /tmp/ldapselections
 
 while read -r line; do echo "$line" | debconf-set-selections; done < /tmp/ldapselections
 

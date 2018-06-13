@@ -12,8 +12,8 @@ echo '%_topdir %{getenv:HOME}/rpmbuild' > ~/.rpmmacros
 
 git clone http://github.com/WarpRat/NTI-310-320-final/ /tmp/ntipkg/
 
-cp /tmp/ntipkg/nti320pkg.spec /root/rpmbuild/SPECS/
-cp /tmp/ntipkg/nti320pkg-0.*.tar.gz /root/rpmbuild/SOURCES/
+cp /tmp/ntipkg/nti320pkg/nti320pkg.spec /root/rpmbuild/SPECS/
+cp /tmp/ntipkg/nti320pkg/nti320pkg-0.*.tar.gz /root/rpmbuild/SOURCES/
 
 rpmbuild -v -bb --clean /root/rpmbuild/SPECS/nti320pkg.spec
 
