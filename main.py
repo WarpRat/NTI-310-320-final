@@ -451,7 +451,7 @@ if __name__ == '__main__':
 
   generate_nagios.write_nagios_cfg(to_mon, nagios_info['name'], zone)
   
-  repo_ip=$(gcloud compute instances list --filter="status=RUNNING" | grep repo | awk '{print $4}')
+  repo_ip=os.popen('gcloud compute instances list --filter="status=RUNNING" | grep repo | awk \'{print $4}\'').read()
   command = "'gcloud compute scp /tmp/ntipkg/*\.rpm %s:/centos/7/extras/x86_64/Packages/ --quiet --zone %s'" % (repo_ip, zone)
   os.system('gcloud compute ssh %s --quiet --zone %s --command %s' % (build_info['name'], zone, command))
   command = "'sudo createrepo /centos/7/extras/x86_64/Packages/'"
