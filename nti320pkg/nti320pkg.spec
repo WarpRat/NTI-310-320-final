@@ -68,8 +68,8 @@ rm /thisworked
 rm /etc/nrpe.d/nti320.cfg
 
 %changelog			# changes you (and others) have made and why
+* Mon Jun 11 2018 Robert Russell <robertcharlesrussell@gmail.com>
+- Added missing package requirement nagios-nrpe-plugin
 * Thu May 31 2018 Robert Russell <robertcharlesrussell@gmail.com>
 - Added custom nrpe commands
 - Added post install script instructions to pull down info from gcloud project metadata server
-* Mon Jun 11 2018 Robert Russell <robertcharlesrussell@gmail.com>
-- Added missing package requirement nagios-nrpe-plugin
