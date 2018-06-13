@@ -472,6 +472,7 @@ if __name__ == '__main__':
     print('*******************\n' * 3)
     os.system('gcloud compute ssh %s --quiet --zone %s --command %s' % (i['name'], zone, command))
 
+  os.rmdir('tmp')
   time.sleep(3)
   os.system('clear')
   print('You did it! Go see if everything works.')
