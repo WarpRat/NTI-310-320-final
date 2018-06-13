@@ -8,7 +8,7 @@ yum install -y rpm-build make gcc git
 
 mkdir -p /root/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 
-echo '%_topdir %{getenv:HOME}/rpmbuild' > ~/.rpmmacros
+echo '%_topdir /root/rpmbuild' > ~/.rpmmacros
 
 git clone http://github.com/WarpRat/NTI-310-320-final/ /tmp/ntipkg/
 
