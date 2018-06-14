@@ -3,6 +3,8 @@
 #Do initial updates
 apt-get update -y && apt-get upgrade -y
 
+export DEBIAN_FRONTEND=noninteractive
+
 #Install debconf
 apt-get install -y debconf-utils
 
@@ -12,8 +14,6 @@ curl https://raw.githubusercontent.com/WarpRat/NTI-310-320-final/master/scripts/
 ldap_ip=$(curl "http://metadata.google.internal/computeMetadata/v1/project/attributes/ldap_ip" -H "Metadata-Flavor: Google")
 
 sed -i "s/\(ldap-server\).*$/\1\\tstring ldap:\/\/$ldap_ip/g" /tmp/ldapselections
-
-export DEBIAN_FRONTEND=noninteractive
 
 while read -r line; do echo "$line" | debconf-set-selections; done < /tmp/ldapselections
 
