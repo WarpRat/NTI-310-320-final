@@ -9,7 +9,7 @@ URL:		https://github.com/WarpRat/NTI-320
 Source0:    https://github.com/WarpRat/NTI-320/nti320pkg-0.2.tar.gz
 
 BuildRequires:	gcc, python >= 1.3
-Requires:	bash, net-snmp, net-snmp-utils, nrpe, nagios-plugins-all, nagios-plugin-nrpe
+Requires:	bash, net-snmp, net-snmp-utils, nrpe, nagios-plugins-all
 
 %description
 This package contains customization for a monitoring server, a trending server and a   logserver on the nti320 network.
