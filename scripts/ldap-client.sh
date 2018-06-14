@@ -13,10 +13,12 @@ ldap_ip=$(curl "http://metadata.google.internal/computeMetadata/v1/project/attri
 
 sed -i "s/\(ldap-server\).*$/\1\\tstring ldap:\/\/$ldap_ip/g" /tmp/ldapselections
 
+export DEBIAN_FRONTEND=noninteractive
+
 while read -r line; do echo "$line" | debconf-set-selections; done < /tmp/ldapselections
 
 #Install ldap utilities
-DEBIAN_FRONTEND=noninteractive apt-get install -y libpam-ldap nscd
+apt-get install -y libpam-ldap nscd
 
 #Set login methods to include ldap
 sed -i 's/compat/compat ldap/g' /etc/nsswitch.conf
