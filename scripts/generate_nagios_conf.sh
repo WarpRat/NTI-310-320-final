@@ -54,5 +54,4 @@ define service{
         host_name                       $host
         service_description             memory
         check_command                   check_nrpe!check-mem
-}
-" > ./tmp/"$host".cfg
+}" > ./tmp/"$host".cfg

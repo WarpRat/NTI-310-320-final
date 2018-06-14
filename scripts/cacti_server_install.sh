@@ -60,7 +60,7 @@ mysql cacti < $cacloc -u cacti -p$(cat /root/.cacti_pass)
 #Set up cacti with the proper username and password to access the DB
 sed -i "s/\$database_username =.*$/\$database_username = 'cacti';/g" /etc/cacti/db.php
 cactipass=$(cat /root/.cacti_pass)
-sed -i "s/\$database_password =.*$/\$database_password = '${cactipass//\//\\/}';/g" /etc/cacti/db.php
+sed -i "s/\$database_password =.*$/\$database_password = '$cactipass';/g" /etc/cacti/db.php
 
 #Open up the website to traffic from anywhere
 sed -i "s/Require host localhost/Require all granted/" /etc/httpd/conf.d/cacti.conf
