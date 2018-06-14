@@ -1,9 +1,9 @@
 #!/bin/bash
 
+export DEBIAN_FRONTEND=noninteractive
+
 #Do initial updates
 apt-get update -y && apt-get upgrade -y
-
-export DEBIAN_FRONTEND=noninteractive
 
 #Install debconf
 apt-get install -y debconf-utils
