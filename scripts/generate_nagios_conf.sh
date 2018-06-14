@@ -46,7 +46,7 @@ define service{
 define service{
         use                             generic-service         ; Name of service template to
         host_name                       $host
-        service_description             totalprocs
+        service_description             nfsdirs
         check_command                   check_nrpe!check-nfs-dirs
 }
 define service{
