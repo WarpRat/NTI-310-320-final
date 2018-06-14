@@ -445,7 +445,7 @@ if __name__ == '__main__':
         else:
           time.sleep(1)
     
-  all_hosts = [nagios_info, build_info, rsyslog_info, ldap_info, nfs_info, db_info, ldapc_info, nfsc_info, django_infoa, django_infob, cacti_info, nginx_info]
+  all_hosts = [nagios_info, build_info, rsyslog_info, ldap_info, nfs_info, db_info, ldapc_info, nfsc_info, django_infoa, django_infob, nginx_info, cacti_info]
   to_mon = []
   for i in all_hosts: 
     if not i in [ldapc_info, nfsc_info]: #Workaround for not having debian nagios scripts. write those and replace
