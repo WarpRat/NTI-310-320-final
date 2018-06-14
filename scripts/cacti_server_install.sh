@@ -28,9 +28,7 @@ openssl rand -base64 32 | tr -d /=+  > /root/.cacti_pass
 
 #Perform updates and install all software packages
 yum -y update
-yum -y install cacti
-yum -y install mariadb-server php-process php-gd php mod_php
-yum -y install php-process php-gd php mod_php
+yum -y install cacti mariadb-server php-process php-gd php mod_php
 
 #Start apache, maria, and snmp on boot
 systemctl enable mariadb httpd snmpd
