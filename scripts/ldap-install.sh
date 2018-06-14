@@ -128,7 +128,28 @@ ou: People
 
 dn: ou=Group,dc=nti310,dc=local
 objectClass: organizationalUnit
-ou: Group" > /tmp/base.ldif
+ou: Group
+
+dn: cn=Pioneers,ou=Group,dc=nti310,dc=local
+cn: Pioneers
+gidnumber: 555
+objectclass: posixGroup
+objectclass: top
+
+dn: cn=John Perry Barlow,ou=People,dc=nti310,dc=local
+cn: John Perry Barlow
+gidnumber: 555
+givenname: John Perry
+homedirectory: /home/users/jbarlow
+loginshell: /bin/bash
+objectclass: inetOrgPerson
+objectclass: posixAccount
+objectclass: top
+sn: Barlow
+uid: jbarlow
+uidnumber: 1111
+userpassword: P@ssw0rd1
+" > /tmp/base.ldif
 
 #Add the basic structure just created to the LDAP database.
 ldapadd -x -W -D "cn=ldapadm,dc=nti310,dc=local" -f /tmp/base.ldif -y /root/ldap_admin_pass
