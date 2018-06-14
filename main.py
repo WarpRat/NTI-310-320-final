@@ -447,8 +447,9 @@ if __name__ == '__main__':
     
   all_hosts = [nagios_info, cacti_info, build_info, rsyslog_info, ldap_info, nfs_info, db_info, ldapc_info, nfsc_info, django_infoa, django_infob, nginx_info]
   to_mon = []
-  for i in all_hosts:
-    to_mon.append({'name': i['name'], 'ip': i['ip']})
+  for i in all_hosts: 
+    if not i = [ldapc_info, nfsc_info]: #Workaround for not having debian nagios scripts. write those and replace
+      to_mon.append({'name': i['name'], 'ip': i['ip']})
 
   while not check_ready(nagios_info['id']):
     print('Nagios not ready yet')
