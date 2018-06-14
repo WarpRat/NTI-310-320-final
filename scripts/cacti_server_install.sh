@@ -23,8 +23,8 @@ gpgcheck=0
 " > /etc/yum.repos.d/NTI-320.repo
 
 #Generate radom passwords
-openssl rand -base64 32 | tr -d /=+ | cut -c 20 > /root/.sql_admin_pass
-openssl rand -base64 32 | tr -d /=+ | cut -c 20 > /root/.cacti_pass
+openssl rand -base64 32 | tr -d /=+  > /root/.sql_admin_pass
+openssl rand -base64 32 | tr -d /=+  > /root/.cacti_pass
 
 #Perform updates and install all software packages
 yum -y update
