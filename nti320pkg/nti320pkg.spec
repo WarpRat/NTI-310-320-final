@@ -51,7 +51,7 @@ nagios_ip=$(curl "http://metadata.google.internal/computeMetadata/v1/project/att
 cacti_ip=$(curl "http://metadata.google.internal/computeMetadata/v1/project/attributes/cacti_ip" -H "Metadata-Flavor: Google")
 rsyslog_ip=$(curl "http://metadata.google.internal/computeMetadata/v1/project/attributes/rsyslog_ip" -H "Metadata-Flavor: Google")
 
-touch /thisworked
+touch /thisworked-final320
 
 systemctl enable snmpd
 systemctl start snmpd
